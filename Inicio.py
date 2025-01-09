@@ -29,3 +29,19 @@ with row[1]:
   with row2[1]:
     with st.container(border=True): 
       st.write(f"Total de lucro: R${total_lucro}")
+
+st.title('Shows dos dias selecionados')
+row3 = st.columns([7, 3])
+with row3[0]:
+    days = st.multiselect("Escolha a data:", (merged_df['Data Evento']), placeholder="Selecione a Data", default=None)
+row = st.columns([3, 5, 3])
+with row[1]:
+  shows = GET_SHOWS()
+  # Converta a coluna 'DATA EVENTO' para datetime (se necessário)
+  shows['Data Evento'] = pd.to_datetime(shows['Data Evento'], format='%Y-%m-%d')
+  if days:
+    # Converte as datas selecionadas para o mesmo tipo de 'DATA EVENTO'
+    days = pd.to_datetime(days, format='%Y-%m-%d')
+    shows = shows[shows['Data Evento'].isin(days)]
+  shows['Data Evento'] = shows['Data Evento'].dt.date
+  st.dataframe(shows, hide_index=True)
