@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.queries import *
+from utils.functions import *
 
 
 st.set_page_config(
@@ -21,6 +22,8 @@ merged_df['Lucro'] = merged_df['Valor Liquido'] - merged_df['Valor Gasto']
 
 total_lucro = merged_df['Lucro'].sum()
 total_lucro = f"{total_lucro:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+merged_df = format_columns_brazilian(merged_df, ['Valor Bruto', 'Desconto', 'Valor Liquido', 'Valor Gasto', 'Lucro'])
 
 row = st.columns([3, 6, 3])
 with row[1]:
@@ -44,4 +47,5 @@ with row[1]:
     days = pd.to_datetime(days, format='%Y-%m-%d')
     shows = shows[shows['Data Evento'].isin(days)]
   shows['Data Evento'] = shows['Data Evento'].dt.date
+  shows = format_columns_brazilian(shows, ['Valor Bruto'])
   st.dataframe(shows, hide_index=True)
